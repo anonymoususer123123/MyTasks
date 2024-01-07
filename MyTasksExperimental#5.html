@@ -64,8 +64,6 @@
       <input type="datetime-local" id="endDate" v-model="newTask.endDate" required>
       <button type="submit">Add Task</button>
     </form>
-    <!-- Save button -->
-    <button @click="saveTasks">Save</button>
   </div>
 
   <script>
@@ -74,7 +72,23 @@
       data: {
         currentTime: new Date().toLocaleString(),
         redLinePosition: 0,
-        tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+        tasks: [
+          {
+            id: 1,
+            title: 'Task 1',
+            description: 'Description 1',
+            startDate: '2024-01-01T08:00',
+            endDate: '2024-01-01T10:00'
+          },
+          {
+            id: 2,
+            title: 'Task 2',
+            description: 'Description 2',
+            startDate: '2024-01-02T09:00',
+            endDate: '2024-01-02T12:00'
+          }
+          // More tasks can be added here
+        ],
         newTask: {
           title: '',
           description: '',
@@ -100,7 +114,8 @@
       },
       methods: {
         addTask() {
-          this.tasks.push({ 
+          // Logic to add tasks
+          this.tasks.push({
             id: this.tasks.length + 1,
             title: this.newTask.title,
             description: this.newTask.description,
@@ -110,33 +125,34 @@
           this.resetForm();
         },
         editTask(id) {
+          // Logic to edit tasks
           const taskToEdit = this.tasks.find(task => task.id === id);
           this.editedTask = { ...taskToEdit };
           this.editMode = true;
         },
         updateTask() {
+          // Logic to update tasks
           const index = this.tasks.findIndex(task => task.id === this.editedTask.id);
           this.tasks.splice(index, 1, { ...this.editedTask });
           this.resetForm();
         },
         deleteTask(id) {
-          const index = this.tasks.findIndex(task => task.id === id);
-          this.tasks.splice(index, 1);
+          // Logic to delete tasks
+          this.tasks = this.tasks.filter(task => task.id !== id);
         },
         updateRedLinePosition() {
-          // Calculate the red line position based on time
-          // Adjust this logic as per the layout of your timetable
+          // Logic to update red line position based on time
           const now = new Date();
-          // Example: Assuming each minute represents 1 pixel
           this.redLinePosition = (now.getMinutes() + now.getSeconds() / 60) * 1;
         },
         taskColor(task) {
-          // Compare the task's end time with the current time to determine color
+          // Logic to determine task color based on time
           const end = new Date(task.endDate);
           const now = new Date();
           return end <= now ? 'red' : 'darkgreen';
         },
         resetForm() {
+          // Logic to reset form fields
           this.newTask.title = '';
           this.newTask.description = '';
           this.newTask.startDate = '';
@@ -151,13 +167,10 @@
           };
         },
         updateTaskStatus() {
-          // Update task colors based on completion status
+          // Logic to update task status (color)
           this.tasks.forEach(task => {
             task.color = this.taskColor(task);
           });
-        },
-        saveTasks() {
-          localStorage.setItem('tasks', JSON.stringify(this.tasks));
         }
       }
     });

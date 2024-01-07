@@ -70,25 +70,9 @@
     new Vue({
       el: '#app',
       data: {
-        currentTime: new Date().toLocaleString(),
+        currentTime: '',
         redLinePosition: 0,
-        tasks: [
-          {
-            id: 1,
-            title: 'Task 1',
-            description: 'Description 1',
-            startDate: '2024-01-01T08:00',
-            endDate: '2024-01-01T10:00'
-          },
-          {
-            id: 2,
-            title: 'Task 2',
-            description: 'Description 2',
-            startDate: '2024-01-02T09:00',
-            endDate: '2024-01-02T12:00'
-          }
-          // More tasks can be added here
-        ],
+        tasks: [],
         newTask: {
           title: '',
           description: '',
@@ -106,15 +90,35 @@
       },
       mounted() {
         // Update current time every second
+        this.updateTime();
         setInterval(() => {
-          this.currentTime = new Date().toLocaleString();
+          this.updateTime();
           this.updateRedLinePosition();
           this.updateTaskStatus();
         }, 1000);
+        // Predefined tasks (for demonstration)
+        this.tasks = [
+          {
+            id: 1,
+            title: 'Task 1',
+            description: 'Description 1',
+            startDate: '2024-01-01T08:00',
+            endDate: '2024-01-01T10:00'
+          },
+          {
+            id: 2,
+            title: 'Task 2',
+            description: 'Description 2',
+            startDate: '2024-01-02T09:00',
+            endDate: '2024-01-02T12:00'
+          }
+          // ... more predefined tasks as needed
+        ];
       },
       methods: {
         addTask() {
-          // Logic to add tasks
+          // Logic to add tasks (use API/backend here in a real scenario)
+          // For demonstration, we'll push a new task with incremented IDs
           this.tasks.push({
             id: this.tasks.length + 1,
             title: this.newTask.title,
@@ -152,7 +156,7 @@
           return end <= now ? 'red' : 'darkgreen';
         },
         resetForm() {
-          // Logic to reset form fields
+          // Logic to reset form fields after task addition/editing
           this.newTask.title = '';
           this.newTask.description = '';
           this.newTask.startDate = '';
@@ -166,8 +170,12 @@
             endDate: ''
           };
         },
+        updateTime() {
+          // Update current time for display
+          this.currentTime = new Date().toLocaleString();
+        },
         updateTaskStatus() {
-          // Logic to update task status (color)
+          // Logic to update task status (color) based on current time
           this.tasks.forEach(task => {
             task.color = this.taskColor(task);
           });
